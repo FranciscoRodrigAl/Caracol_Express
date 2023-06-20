@@ -4,6 +4,9 @@
  */
 package vista;
 
+import controlador.Registro;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author JAVIER
@@ -45,6 +48,11 @@ public class EliminarEncomienda extends javax.swing.JFrame {
         jButton1.setFont(new java.awt.Font("Segoe UI Semibold", 1, 12)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/ICONO ELIMINAR.jpg"))); // NOI18N
         jButton1.setText("ELIMINAR");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 190, 120, 40));
 
         jLabel2.setFont(new java.awt.Font("Showcard Gothic", 1, 24)); // NOI18N
@@ -61,6 +69,30 @@ public class EliminarEncomienda extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    public static Integer tryParse(String text){
+        try {
+            return Integer.valueOf(text);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:}
+        Integer idEliminar = tryParse(this.tf_id.getText().trim());
+        
+        if(idEliminar != null){
+            boolean eliminado = Registro.Eliminar(idEliminar);
+            if(eliminado){
+                 JOptionPane.showMessageDialog(rootPane,"Se ha eliminado el id "+idEliminar);
+                 this.tf_id.setText("");
+            }else{
+                 JOptionPane.showMessageDialog(rootPane,"No se ha eliminado el registro de Encomienda");
+            }
+        }else{
+            JOptionPane.showMessageDialog(rootPane,"No se ha ingresado un Id de Encomienda para eliminar");
+        }
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

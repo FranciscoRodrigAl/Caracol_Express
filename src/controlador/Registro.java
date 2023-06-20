@@ -137,4 +137,32 @@ public class Registro {
         }
         return null;
     }
+    
+     public static  ArrayList<Encomienda> buscarListaEncomienda(int encomiendaId){
+        ArrayList<Encomienda> listaEncomiendas = new ArrayList<Encomienda>();
+        try {
+            Connection conexion = Conexion.getConexion();
+            String query = "SELECT en_id,en_destinatario,en_direccion,en_tipo,en_entregadomicilio,en_tamano,en_remitente FROM encomienda WHERE en_id=?";
+            PreparedStatement buscarPorEncomienda = conexion.prepareStatement(query);
+            buscarPorEncomienda.setInt(1,encomiendaId);
+            ResultSet rs = buscarPorEncomienda.executeQuery();
+            while(rs.next()){
+                Encomienda encomEncontrada = new Encomienda();
+                encomEncontrada.setId(rs.getInt("en_id"));
+                encomEncontrada.setDestinatario(rs.getString("en_destinatario"));
+                encomEncontrada.setDireccion(rs.getString("en_direccion"));
+                encomEncontrada.setTipo(rs.getString("en_tipo"));
+                encomEncontrada.setEntregaDomicilio(rs.getBoolean("en_entregadomicilio"));
+                encomEncontrada.setTamano(rs.getString("en_tamano"));
+                encomEncontrada.setRemitente(rs.getString("en_remitente"));
+                listaEncomiendas.add(encomEncontrada);
+            }
+            return listaEncomiendas;
+        } catch (SQLException s){
+            System.out.println("Error SQL al listar encomienda"+s.getMessage());
+        }catch (Exception e) {
+            System.out.println("Error al listar encomienda "+e.getMessage());
+        }
+        return null;
+    }
 }

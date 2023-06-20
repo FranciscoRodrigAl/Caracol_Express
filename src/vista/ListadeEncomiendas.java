@@ -4,7 +4,10 @@
  */
 package vista;
 
+import controlador.Registro;
 import java.awt.Color;
+import java.util.ArrayList;
+import modelo.Encomienda;
 
 /**
  *
@@ -59,6 +62,11 @@ public class ListadeEncomiendas extends javax.swing.JFrame {
         bt_generarlistados.setFont(new java.awt.Font("Segoe UI Semibold", 1, 12)); // NOI18N
         bt_generarlistados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/GENERAR VISTA.png"))); // NOI18N
         bt_generarlistados.setText("GENERAR LISTADOS");
+        bt_generarlistados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_generarlistadosActionPerformed(evt);
+            }
+        });
         getContentPane().add(bt_generarlistados, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 80, -1, 20));
         getContentPane().add(tf_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 80, 200, -1));
 
@@ -87,7 +95,48 @@ public class ListadeEncomiendas extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    //PARSEO SEGURO DE INT
+    public static Integer tryParse(String text){
+        try {
+            return Integer.valueOf(text);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    private void bt_generarlistadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_generarlistadosActionPerformed
+        // TODO add your handling code here:
+        Integer idBusqueda = tryParse(this.tf_id.getText().trim());
+        ArrayList<Encomienda> listaEncontrada = null;
+        if(idBusqueda != null){
+            listaEncontrada = Registro.buscarListaEncomienda(idBusqueda);
+        }
+        actualizarTablaEncomiendas(listaEncontrada);
+    }//GEN-LAST:event_bt_generarlistadosActionPerformed
 
+    private void actualizarTablaEncomiendas(ArrayList<Encomienda> listaEncontrada){
+        ArrayList<Encomienda> lista;
+        if(listaEncontrada == null){
+            lista = Registro.mostrarEncomiendas();
+        }else{
+            lista = listaEncontrada;
+        }
+        String matrix[][] = new String[lista.size()][7];
+        for (int i = 0; i < lista.size(); i++) {
+            matrix[i][0] = lista.get(i).getId()+"";
+            matrix[i][1] = lista.get(i).getDestinatario();
+            matrix[i][2] = lista.get(i).getDireccion();
+            matrix[i][3] = lista.get(i).getTipo();
+            matrix[i][4] = lista.get(i).isEntregaDomicilio()?"Si":"No";
+            matrix[i][5] = lista.get(i).getTamano();
+            matrix[i][6] = lista.get(i).getRemitente();
+        }
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+                matrix,
+                new String[]{
+                    "Id","Destinatario","Dirección","Tipo","En Domicilio","Tamaño","Remitente"
+                }
+        ));
+    }
     /**
      * @param args the command line arguments
      */
