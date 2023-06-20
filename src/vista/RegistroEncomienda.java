@@ -152,6 +152,11 @@ public class RegistroEncomienda extends javax.swing.JFrame {
         bt_modificar.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
         bt_modificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/mod.png"))); // NOI18N
         bt_modificar.setText("   Modificar");
+        bt_modificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_modificarActionPerformed(evt);
+            }
+        });
         getContentPane().add(bt_modificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 380, 150, 40));
 
         bt_limpiar.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
@@ -208,10 +213,38 @@ public class RegistroEncomienda extends javax.swing.JFrame {
 
     private void bt_Buscar_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_Buscar_idActionPerformed
         // TODO add your handling code here:
+        Integer idBusqueda = tryParse(this.tf_id.getText().trim())  ;
+        if(idBusqueda == null){
+            JOptionPane.showMessageDialog(rootPane,"No se ha ingresado un Id de Encomienda");
+        }else{
+            this.tf_id.setEnabled(false);
+            Encomienda encontrado = Registro.buscarPorEncomienda(idBusqueda);
+            this.tf_destinatario.setText(encontrado.getDestinatario());
+            this.tf_direccion.setText(encontrado.getDireccion());
+            this.tf_remitente.setText(encontrado.getRemitente());
+            this.cb_tamaño.setSelectedItem(encontrado.getTamano());
+            if("paquete".equalsIgnoreCase(encontrado.getTipo())){
+                this.rb_paquetes.setSelected(true);
+            }else{
+                this.rb_sobre.setSelected(true);
+            }
+            this.Cb_entregadomicilio.setSelected(encontrado.isEntregaDomicilio());
+            
+        }
+        
+        
     }//GEN-LAST:event_bt_Buscar_idActionPerformed
 
     private void bt_limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_limpiarActionPerformed
         // TODO add your handling code here:
+        this.tf_id.setEnabled(true);
+        this.tf_id.setText("");
+        this.tf_destinatario.setText("");
+        this.tf_direccion.setText("");
+        this.tf_remitente.setText("");
+        this.cb_tamaño.setSelectedIndex(0);
+        this.rb_paquetes.setSelected(true);
+        this.Cb_entregadomicilio.setSelected(false);
     }//GEN-LAST:event_bt_limpiarActionPerformed
 
     private void tf_destinatarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_destinatarioActionPerformed
@@ -255,6 +288,36 @@ public class RegistroEncomienda extends javax.swing.JFrame {
 
         
     }//GEN-LAST:event_bt_agregarActionPerformed
+
+    private void bt_modificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_modificarActionPerformed
+        // TODO add your handling code here:
+        try {
+            String validationMsg ="";
+            Encomienda encEditada = new Encomienda();
+            encEditada.setId(tryParse(this.tf_id.getText()));
+            encEditada.setDestinatario(this.tf_destinatario.getText().trim());
+            encEditada.setDireccion(this.tf_direccion.getText().trim());
+            encEditada.setRemitente(this.tf_remitente.getText().trim());
+            encEditada.setTamano(this.cb_tamaño.getSelectedItem().toString().trim());
+            encEditada.setTipo(this.rb_paquetes.isSelected()?"paquete":"sobre");
+            encEditada.setEntregaDomicilio( this.Cb_entregadomicilio.isSelected());
+            validationMsg = Encomienda.validarEncomienda(encEditada);
+             if(!"".equals(validationMsg)){
+                JOptionPane.showMessageDialog(rootPane, validationMsg);
+                return;
+            }
+          
+            boolean saved = Registro.Editar(encEditada);
+            if(saved){
+                JOptionPane.showMessageDialog(this, "Registro de Encomienda Editado");
+            }else{
+                JOptionPane.showMessageDialog(this, "NO se editó Encomienda!!!");
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane,e);
+        }
+    }//GEN-LAST:event_bt_modificarActionPerformed
 
     /**
      * @param args the command line arguments
