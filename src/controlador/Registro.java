@@ -41,7 +41,7 @@ public class Registro {
                     + " en_tipo=?, "
                     + " en_entregadomicilio=?,"
                     + " en_tamano=?,"
-                    + " en_remitente=?, "
+                    + " en_remitente=? "
                     + " WHERE en_id=?";
             PreparedStatement insertar = conexion.prepareStatement(query);
             insertar.setString(1, enc.getDestinatario());
