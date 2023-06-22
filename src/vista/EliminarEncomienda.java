@@ -6,6 +6,7 @@ package vista;
 
 import controlador.Registro;
 import javax.swing.JOptionPane;
+import modelo.Encomienda;
 
 /**
  *
@@ -79,14 +80,18 @@ public class EliminarEncomienda extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:}
         Integer idEliminar = tryParse(this.tf_id.getText().trim());
-        
         if(idEliminar != null){
-            boolean eliminado = Registro.Eliminar(idEliminar);
-            if(eliminado){
-                 JOptionPane.showMessageDialog(rootPane,"Se ha eliminado el id "+idEliminar);
-                 this.tf_id.setText("");
-            }else{
-                 JOptionPane.showMessageDialog(rootPane,"No se ha eliminado el registro de Encomienda");
+            Encomienda encontrada = Registro.buscarPorEncomienda(idEliminar);
+            if(encontrada != null){
+                boolean eliminado = Registro.Eliminar(idEliminar);
+                if(eliminado){
+                    JOptionPane.showMessageDialog(rootPane,"Se ha eliminado el id "+idEliminar);
+                    this.tf_id.setText("");
+                }else{
+                    JOptionPane.showMessageDialog(rootPane,"No se ha eliminado el registro de Encomienda");
+                }
+            } else{
+                JOptionPane.showMessageDialog(rootPane,"El registro de Encomienda no fue encontrado");                
             }
         }else{
             JOptionPane.showMessageDialog(rootPane,"No se ha ingresado un Id de Encomienda para eliminar");
